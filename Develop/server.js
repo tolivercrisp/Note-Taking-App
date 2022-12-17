@@ -32,12 +32,14 @@ app.get('/api/notes', (req, res) => {
 
 // POST request to create a new note
 app.post('/api/notes', (req, res) => {
-  let id = uuidv4();
+  const { title, text } = req.body;
+
       let newNote = {
         title,
         text,
-        id: id,
+        id: uuidv4(),
       };
+
       notes.push(newNote);
       const stringifyNote = JSON.stringify(notes);
       res.json(notes);
@@ -52,7 +54,7 @@ app.post('/api/notes', (req, res) => {
 //  DELETE route for specific note
   app.delete('/api/notes/:id', (req, res) => {
     let noteID = req.params.id;
-    fs.readFile("db/db.json", "utf8", function (err, data) {
+    fs.readFile("db/notes.json", "utf8", function (err, data) {
       let updatedNotes = JSON.parse(data).filter((note) => {
         return note.id !== noteID;
       });
