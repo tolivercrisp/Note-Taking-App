@@ -1,16 +1,14 @@
 const notes = require('express').Router();
 const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
 
-// import JSON note data
-const noteData = require('../db/db.json');
 
-// GET Route for retrieving new notes
-notes.get('/notes', (req, res) => {
-    readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
+// GET Route for retrieving all notes
+notes.get('/', (req, res) => {
+    readFromFile('./db/notes.json').then((data) => res.json(JSON.parse(data)));
   });
 
 // POST request to add a note
-notes.post('/notes', (req, res) => {
+notes.post('/', (req, res) => {
     // POST request was received
     console.info(`${req.method} request received to add a note`);
   
@@ -25,7 +23,7 @@ notes.post('/notes', (req, res) => {
         text
       };
   
-      readAndAppend(newNote, './db/db.json');
+      readAndAppend(newNote, './db/notes.json');
   
       const response = {
         status: 'success',
