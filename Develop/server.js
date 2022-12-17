@@ -7,7 +7,6 @@ const PORT = 3000;
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const { readAndAppend, readFromFile } = require('./helpers/fsUtils');
 
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.urlencoded({ extended: true }));
@@ -33,43 +32,41 @@ app.get('/api/notes', (req, res) => {
 
 // POST request to create a new note
 app.post('/api/notes', (req, res) => {
-    console.info(`${req.method} request received to add a note`);
-    const { title, text } = req.body;
-  
-    if (title && text) {
-      const newNote = {
-        title: req.body.title,
-        text: req.body.text,
-        id: uuidv4(),
+  let id = uuidv4();
+      let newNote = {
+        title,
+        text,
+        id: id,
       };
-      readAndAppend(newNote, './db/notes.json');
-      const response = {
-        status: 'success',
-        body: newNote,
-      };
-      console.log(response);
-      res.status(201).json(response);
-    } else {
-      res.status(500).json('Error in posting note');
-    }
-  });
+      notes.push(newNote);
+      const stringifyNote = JSON.stringify(notes);
+      res.json(notes);
+      fs.writeFile("db/notes.json", stringifyNote, (err) => {
+        if (err) console.log(err);
+        else {
+          console.log("Note successfully saved to db.json");
+        }
+      });
+    });
 
 //  DELETE route for specific note
   app.delete('/api/notes/:id', (req, res) => {
-    const noteId = req.params.id;
-  readFromFile('./db/notes.json')
-    .then((data) => JSON.parse(data))
-    .then((json) => {
-      // Make a new array of all tips except the one with the ID provided in the URL
-      const result = json.filter((note) => note.id !== noteId);
-
-      // Save that array to the filesystem
-      writeToFile('./db/notes.json', result);
-
-      // Respond to the DELETE request
-      res.json(`Note ${id} has been deleted 🗑️`);
+    let noteID = req.params.id;
+    fs.readFile("db/db.json", "utf8", function (err, data) {
+      let updatedNotes = JSON.parse(data).filter((note) => {
+        return note.id !== noteID;
+      });
+      notes = updatedNotes;
+      const stringifyNote = JSON.stringify(updatedNotes);
+      fs.writeFile("db/notes.json", stringifyNote, (err) => {
+        if (err) console.log(err);
+        else {
+          console.log("Note successfully deleted from db.json");
+        }
+      });
+      res.json(stringifyNote);
     });
-});
+  });
 
 // Server is listening
 app.listen(PORT, () => {
