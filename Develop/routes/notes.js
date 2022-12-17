@@ -2,7 +2,7 @@ const notes = require('express').Router();
 const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
 
 // POST request to add a note
-app.post('/api/notes', (req, res) => {
+notes.post('/api/notes', (req, res) => {
     // Log that a POST request was received
     console.info(`${req.method} request received to add a note`);
   
@@ -40,3 +40,5 @@ app.post('/api/notes', (req, res) => {
       res.status(500).json('Error in posting note');
     }
   });
+
+  module.exports = notes;

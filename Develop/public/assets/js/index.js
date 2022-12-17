@@ -1,11 +1,3 @@
-const express = require('express');
-const index = express();
-
-// Import modular router for /notes
-const notesRouter = require('../../../routes/notes');
-
-index.use('/notes', notesRouter);
-
 let noteTitle;
 let noteText;
 let saveNoteBtn;
@@ -190,4 +182,4 @@ if (window.location.pathname === '/notes') {
 
 getAndRenderNotes();
 
-module.exports = index;
+module.exports = app;
