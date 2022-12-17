@@ -2,13 +2,12 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-
-// import API route information
-const api = require('./routes/api-router');
   
 // import filesystem and path
 const fs = require('fs');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const { readAndAppend, readFromFile } = require('./helpers/fsUtils');
 
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.urlencoded({ extended: true }));
@@ -16,19 +15,14 @@ app.use(express.json());
 app.use(express.static('public'));
 let notes = require('./db/notes.json')
 
-// GET route for homepage
-app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/index.html'))
-);
-
 // GET route for notes page
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
 // GET route for notes API
-app.get("/api/notes", function (req, res) {
-  fs.readFile("./db/notes.json", "utf8", function (err, data) {
+app.get('/api/notes', (req, res) => {
+  fs.readFile('./db/notes.json', "utf8", function (err, data) {
     if (err) {
       console.log(err);
       return;
@@ -38,7 +32,7 @@ app.get("/api/notes", function (req, res) {
 });
 
 // POST request to create a new note
-router.post('/', (req, res) => {
+app.post('/api/notes', (req, res) => {
     console.info(`${req.method} request received to add a note`);
     const { title, text } = req.body;
   
@@ -61,7 +55,7 @@ router.post('/', (req, res) => {
   });
 
 //  DELETE route for specific note
-  router.delete(`/:id`, (req, res) => {
+  app.delete('/api/notes/:id', (req, res) => {
     const noteId = req.params.id;
   readFromFile('./db/notes.json')
     .then((data) => JSON.parse(data))
