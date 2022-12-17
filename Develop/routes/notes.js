@@ -1,9 +1,17 @@
 const notes = require('express').Router();
 const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
 
+// import JSON note data
+const noteData = require('../db/db.json');
+
+// GET Route for retrieving new notes
+notes.get('/notes', (req, res) => {
+    readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
+  });
+
 // POST request to add a note
-notes.post('/api/notes', (req, res) => {
-    // Log that a POST request was received
+notes.post('/notes', (req, res) => {
+    // POST request was received
     console.info(`${req.method} request received to add a note`);
   
     // Destructuring assignment for the items in req.body
@@ -17,17 +25,7 @@ notes.post('/api/notes', (req, res) => {
         text
       };
   
-      // Convert the data to a string so we can save it
-      const noteString = JSON.stringify(newNote);
-  
-      // Write the string to a file
-      fs.writeFile(`./db/db.json`, noteString, (err) =>
-        err
-          ? console.error(err)
-          : console.log(
-              `Note for ${newNote.product} has been written to JSON file`
-            )
-      );
+      readAndAppend(newNote, './db/db.json');
   
       const response = {
         status: 'success',
