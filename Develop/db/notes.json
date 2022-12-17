@@ -1,26 +1,12 @@
 [
     {
         "title": "Test Title",
-        "text": "Test text"
+        "text": "Test text",
+        "id": "Test id"
     },
     {
-        "title": "poop",
-        "text": "poop"
-    },
-    {
-        "title": "no fuckin way",
-        "text": "omg"
-    },
-    {
-        "title": "hello",
-        "text": "ok"
-    },
-    {
-        "title": "t",
-        "text": "tihiuhiuh"
-    },
-    {
-        "title": "hey",
-        "text": "bonk"
+        "title": "sdflkmslkdfmsd",
+        "text": "skdfsdfsdfsdf",
+        "id": "94057217-696e-4543-9bea-07e1d9532eca"
     }
 ]
