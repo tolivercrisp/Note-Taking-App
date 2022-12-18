@@ -1,7 +1,7 @@
 // import Express
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 80;
   
 // import filesystem and path
 const fs = require('fs');
